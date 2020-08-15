@@ -1,18 +1,20 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 212.64.72.170-腾讯云
+ Source Server         : 123.56.98.57_我的阿里云
  Source Server Type    : MySQL
- Source Server Version : 50731
- Source Host           : 212.64.72.170:3306
+ Source Server Version : 50727
+ Source Host           : 123.56.98.57:3306
  Source Schema         : myblog
 
  Target Server Type    : MySQL
- Target Server Version : 50731
+ Target Server Version : 50727
  File Encoding         : 65001
 
- Date: 15/08/2020 20:32:47
+ Date: 15/08/2020 20:52:44
 */
+CREATE DATABASE myblog;
+USE myblog;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -132,5 +134,10 @@ CREATE TABLE `tb_user`  (
   `role` varchar(8) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of tb_user
+-- ----------------------------
+INSERT INTO `tb_user` VALUES (1, 'admin', '$2a$10$bVek/LGtX7cDfNI90yX8C.kUwOE1H3rrj4VEF53/ygq7BxgjFvCFm', 'admin');
 
 SET FOREIGN_KEY_CHECKS = 1;
