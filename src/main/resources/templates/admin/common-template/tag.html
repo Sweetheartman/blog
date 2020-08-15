@@ -1,0 +1,125 @@
+<div id="content">
+    <header th:replace="admin/common-template/page-header::page_header('Tag')" class="page-header"></header>
+    <section class="forms">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center">
+                            <h3 class="h4">标签管理</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="table-container" class="table-responsive ">
+                                <table th:fragment="list" class="table" >
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>标签</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr th:each="tag,i : ${tags.list}">
+                                        <th scope="row" th:text="${i.count}">1</th>
+                                        <td th:text="${tag.name}">Mark</td>
+                                        <td>
+                                            <button th:data-id="${tag.id}" th:data-name="${tag.name}"
+                                                    onclick="update(this.getAttribute('data-id'),this.getAttribute('data-name'));"
+                                                    class="btn small btn-primary" type="button">修改</button>
+
+                                            <button th:data-id="${tag.id}"
+                                                    onclick="delete_by_id(this.getAttribute('data-id'));"
+                                                    class="btn small btn-danger" type="button">删除</button>
+                                        </td>
+                                    </tr>
+                                    <tr  th:if="${tags.pages} > 1">
+                                        <td colspan="3" class="col-sp" >
+                                            <a th:href="@{/admin/tag(page=${tags.prePage},size=5)}"
+                                               th:if="${tags.hasPreviousPage}"
+                                               type="button">
+                                                上一页
+                                            </a>
+
+                                            <a th:href="@{/admin/tag(page=${tags.nextPage},size=5)}"
+                                               th:if="${tags.hasNextPage}"
+                                               type="button">
+                                                下一页
+                                            </a>
+                                            <span th:text="${tags.pageNum}">13 </span>/<span th:text="${tags.pages}">   32</span> 页
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center">
+                            <h3 class="h4">标签管理</h3>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-inline">
+                                <input id="tag_id" type="hidden" name="id">
+                                <div class="form-group">
+                                    <label for="tag_name" class="sr-only">Name</label>
+                                    <input id="tag_name" name="name"  type="text" placeholder="标签名称" class=" form-control">
+                                </div>
+                                <div class="form-group">
+                                    <button onclick="loaddata()"  type="button" class="btn btn-primary">保存</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function update(id,name){
+                $("#tag_id").val(id);
+                $("#tag_name").val(name);
+            }
+
+            function delete_by_id(id){
+                var url = "/admin/tag/delete";
+                var data = {
+                    id : id
+                };
+                var func = function () {
+                    $("#tag_id").val(null);
+                    $("#tag_name").val(null);
+                };
+
+                $("#table-container").load(url,data,func);
+            }
+
+            function loaddata() {
+
+                var n = $("#tag_name").val();
+                if($.trim(n) === ''){
+                    alert("请输入标签名称");
+                    return ;
+                }
+
+
+                var url = "/admin/tag/save";
+                var data = {
+                    id : $("#tag_id").val(),
+                    name : $("#tag_name").val()
+                };
+                var func = function () {
+                    $("#tag_id").val(null);
+                    $("#tag_name").val(null);
+                };
+
+                $("#table-container").load(url,data,func);
+
+            }
+        </script>
+    </section>
+</div>

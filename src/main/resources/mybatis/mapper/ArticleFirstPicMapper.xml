@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jason.dao.ArticleFirstPicDao">
+
+    <insert id="addFirstImage" parameterType="com.jason.model.entity.ArticleFirstPic">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+        insert into tb_firstpicture (fileName,fileUrl,fileKey) values (#{fileName},#{fileUrl},#{fileKey})
+    </insert>
+
+    <update id="updateFirstImag" parameterType="com.jason.model.entity.ArticleFirstPic">
+        update tb_firstpicture
+        set fileName=#{fileName},fileUrl=#{fileUrl},fileKey=#{fileKey}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteFirstImgById" parameterType="int">
+        delete from tb_firstpicture
+        where id=#{id}
+    </delete>
+
+    <select id="getAllImages" resultType="com.jason.model.entity.ArticleFirstPic">
+        select id,fileName,fileUrl,fileKey from tb_firstpicture
+    </select>
+
+    <select id="getOneImageById" resultType="com.jason.model.entity.ArticleFirstPic" parameterType="int">
+        select id,fileName,fileUrl,fileKey from tb_firstpicture
+        where id=#{id}
+    </select>
+
+</mapper>

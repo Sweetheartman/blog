@@ -1,0 +1,144 @@
+<div id="content">
+    <header th:replace="admin/common-template/page-header::page_header('Picture')" class="page-header"></header>
+    <section class="forms">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center">
+                            <h3 class="h4">首图管理</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="table-container" class="table-responsive ">
+                                <table th:fragment="list" class="table" >
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>首图名称</th>
+                                        <th>首图URL</th>
+                                        <th>首图Key</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr th:each="picture,i : ${pictures.list}">
+                                        <th scope="row" th:text="${i.count}">1</th>
+                                        <td th:text="${picture.fileName}">Mark</td>
+                                        <td th:text="${picture.fileUrl}">Mark</td>
+                                        <td th:text="${picture.fileKey}">Mark</td>
+                                        <td>
+                                            <button th:data-id="${picture.id}" th:data-key="${picture.fileKey}"
+                                                    onclick="delete_by_id(this.getAttribute('data-id'), this.getAttribute('data-key'));"
+                                                    class="btn small btn-danger" type="button">删除</button>
+                                        </td>
+                                    </tr>
+                                    <tr  th:if="${pictures.pages} > 1">
+                                        <td colspan="3" class="col-sp" >
+                                            <a th:href="@{/admin/picture(page=${pictures.prePage},size=5)}"
+                                               th:if="${pictures.hasPreviousPage}"
+                                               type="button">
+                                                上一页
+                                            </a>
+
+                                            <a th:href="@{/admin/picture(page=${pictures.nextPage},size=5)}"
+                                               th:if="${pictures.hasNextPage}"
+                                               type="button">
+                                                下一页
+                                            </a>
+                                            <span th:text="${pictures.pageNum}">13 </span>/<span th:text="${pictures.pages}">   32</span> 页
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center">
+                            <h3 class="h4">首图管理</h3>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-inline">
+                                <input id="picture_id" type="hidden" name="id">
+                                <div class="form-group" style="width: 303px;">
+                                    <input id="file-es" type="file" class="file" data-ref="url2" data-allowed-file-extensions='["jpg","png","gif","jfif"]'>
+                                    <input type="hidden" name="url2" id="fileName" value="">
+                                    <input type="hidden" name="url3" id="fileUrl" value="">
+                                    <input type="hidden" name="url4" id="fileKey" value="">
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <button onclick="loaddata()"  type="button" class="btn btn-primary">保存</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $('#file-es').fileinput({
+                theme: 'fas',
+                enctype: 'multipart/form-data',
+                previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+                language: 'zh',
+                uploadUrl: '/admin/attach/uploadFile'
+            });
+            //异步上传返回结果处理
+            $('#file-es').on('fileerror', function (event, data, msg) {
+
+                console.log("fileerror");
+                console.log(data);
+            });
+            //异步上传返回结果处理
+            $("#file-es").on("fileuploaded", function (event, data, previewId, index) {
+                $('#fileName').val(data.response.filename);
+                $('#fileUrl').val(data.response.url);
+                $('#fileKey').val(data.response.filekey);
+            });
+
+            function delete_by_id(id, key){
+                var url = "/admin/picture/delete";
+                var data = {
+                    id : id,
+                    filekey: key
+                };
+                var func = function () {
+                    $("#picture_id").val(null);
+                    $("#fileName").val(null);
+                    $("#fileUrl").val(null);
+                    $("#fileKey").val(null);
+                };
+
+                $("#table-container").load(url,data,func);
+            }
+
+            function loaddata() {
+
+                var url = "/admin/picture/save";
+                var data = {
+                    id : $("#picture_id").val(),
+                    fileName : $("#fileName").val(),
+                    fileUrl : $("#fileUrl").val(),
+                    fileKey : $("#fileKey").val()
+                };
+                var func = function () {
+                    $("#picture_id").val(null);
+                    $("#fileName").val(null);
+                    $("#fileUrl").val(null);
+                    $("#fileKey").val(null);
+                };
+
+                $("#table-container").load(url,data,func);
+
+            }
+
+        </script>
+    </section>
+</div>

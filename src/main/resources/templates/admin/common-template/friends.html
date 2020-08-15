@@ -1,0 +1,201 @@
+<div id="content">
+    <header th:replace="admin/common-template/page-header::page_header('Friends')" class="page-header"></header>
+    <section class="forms">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center">
+                            <h3 class="h4">友链管理</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="table-container" class="table-responsive ">
+                                <table th:fragment="list" class="table" >
+                                    <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>姓名</th>
+                                        <th>性别</th>
+                                        <th>博客URL</th>
+                                        <th>博客图片URL</th>
+                                        <th>手机号</th>
+                                        <th>邮箱</th>
+                                        <th>博客描述</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <tr th:each="friend,i : ${friends.list}">
+                                        <th scope="row" th:text="${i.count}">1</th>
+                                        <td th:text="${friend.name}">Mark</td>
+                                        <td th:text="${friend.gender}">Mark</td>
+                                        <td th:text="${friend.blogurl}">Mark</td>
+                                        <td th:text="${friend.imgurl}">Mark</td>
+                                        <td th:text="${friend.phone}">Mark</td>
+                                        <td th:text="${friend.mail}">Mark</td>
+                                        <td th:text="${friend.description}">Mark</td>
+                                        <td>
+                                            <button th:data-id="${friend.id}"
+                                                    th:data-name="${friend.name}"
+                                                    th:data-gender="${friend.gender}"
+                                                    th:data-blogurl="${friend.blogurl}"
+                                                    th:data-imgurl="${friend.imgurl}"
+                                                    th:data-phone="${friend.phone}"
+                                                    th:data-mail="${friend.mail}"
+                                                    th:data-description="${friend.description}"
+                                                    onclick="update(
+                                                        this.getAttribute('data-id'),
+                                                        this.getAttribute('data-name'),
+                                                        this.getAttribute('data-gender'),
+                                                        this.getAttribute('data-blogurl'),
+                                                        this.getAttribute('data-imgurl'),
+                                                        this.getAttribute('data-phone'),
+                                                        this.getAttribute('data-mail'),
+                                                        this.getAttribute('data-description')
+                                                        );"
+                                                    class="btn small btn-primary" type="button">修改</button>
+
+                                            <button th:data-id="${friend.id}"
+                                                    onclick="delete_by_id(this.getAttribute('data-id'));"
+                                                    class="btn small btn-danger" type="button">删除</button>
+                                        </td>
+                                    </tr>
+                                    <tr  th:if="${friends.pages} > 1">
+                                        <td colspan="3" class="col-sp" >
+                                            <a th:href="@{/admin/friends(page=${friends.prePage},size=5)}"
+                                               th:if="${friends.hasPreviousPage}"
+                                               type="button">
+                                                上一页
+                                            </a>
+
+                                            <a th:href="@{/admin/friends(page=${friends.nextPage},size=5)}"
+                                               th:if="${friends.hasNextPage}"
+                                               type="button">
+                                                下一页
+                                            </a>
+                                            <span th:text="${friends.pageNum}">13 </span>/<span th:text="${friends.pages}">   32</span> 页
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header d-flex align-items-center">
+                            <h3 class="h4">友链管理</h3>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="form-inline">
+                                <input id="friend_id" type="hidden" name="id">
+                                <div class="form-group">
+                                    <label for="friend_name" class="sr-only">姓名</label>
+                                    <input id="friend_name" name="name"  type="text" placeholder="姓名(*必填)" class=" form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="friend_gender" class="sr-only">性别</label>
+                                    <input id="friend_gender" name="gender"  type="text" placeholder="性别" class=" form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="friend_blogurl" class="sr-only">博客URL</label>
+                                    <input id="friend_blogurl" name="blogurl"  type="text" placeholder="博客地址(*必填)" class=" form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="friend_imgurl" class="sr-only">博客图片URL</label>
+                                    <input id="friend_imgurl" name="imgurl"  type="text" placeholder="博客图片URL" class=" form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="friend_phone" class="sr-only">手机号</label>
+                                    <input id="friend_phone" name="phone"  type="text" placeholder="手机号" class=" form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="friend_mail" class="sr-only">邮箱</label>
+                                    <input id="friend_mail" name="mail"  type="text" placeholder="邮箱" class=" form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="friend_description" class="sr-only">博客描述</label>
+                                    <textarea id="friend_description" name="description" placeholder="博客描述(*必填)" class=" form-control mb-3" required  rows="3" cols="40"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button onclick="loaddata()"  type="button" class="btn btn-primary">保存</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function update(id,name,gender,blogurl,imgurl,phone,mail,description){
+                $("#friend_id").val(id);
+                $("#friend_name").val(name);
+                $("#friend_gender").val(gender);
+                $("#friend_blogurl").val(blogurl);
+                $("#friend_imgurl").val(imgurl);
+                $("#friend_phone").val(phone);
+                $("#friend_mail").val(mail);
+                $("#friend_description").val(description);
+            }
+
+            function delete_by_id(id){
+                var url = "/admin/friends/delete";
+                var data = {
+                    id : id
+                };
+                var func = function () {
+                    $("#friend_id").val(null);
+                    $("#friend_name").val(null);
+                    $("#friend_gender").val(null);
+                    $("#friend_blogurl").val(null);
+                    $("#friend_imgurl").val(null);
+                    $("#friend_phone").val(null);
+                    $("#friend_mail").val(null);
+                    $("#friend_description").val(null);
+                };
+
+                $("#table-container").load(url,data,func);
+            }
+
+            function loaddata() {
+
+                var n = $("#friend_name").val();
+                if($.trim(n) === ''){
+                    alert("请输入姓名");
+                    return ;
+                }
+
+
+                var url = "/admin/friends/save";
+                var data = {
+                    id : $("#friend_id").val(),
+                    name : $("#friend_name").val(),
+                    gender : $("#friend_gender").val(),
+                    blogurl : $("#friend_blogurl").val(),
+                    imgurl : $("#friend_imgurl").val(),
+                    phone : $("#friend_phone").val(),
+                    mail : $("#friend_mail").val(),
+                    description: $("#friend_description").val()
+                };
+                var func = function () {
+                    $("#friend_id").val(null);
+                    $("#friend_name").val(null);
+                    $("#friend_gender").val(null);
+                    $("#friend_blogurl").val(null);
+                    $("#friend_imgurl").val(null);
+                    $("#friend_phone").val(null);
+                    $("#friend_mail").val(null);
+                    $("#friend_description").val(null);
+                };
+
+                $("#table-container").load(url,data,func);
+
+            }
+        </script>
+    </section>
+</div>

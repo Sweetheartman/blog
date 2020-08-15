@@ -1,0 +1,23 @@
+<div th:each="friend,i: ${friends.list}" class="col-lg-4">
+    <div class="sidebar-widget">
+        <div class="single-widget profile-widget box-shadow">
+            <div class="widget-inner text-center">
+                <div class="profile-img">
+                    <a href="#">
+                        <img th:src="${friend.imgurl}"
+                             src="../../static/resource_site/images/profile/1.png" alt="profile">
+                    </a>
+                </div>
+                <div class="profile-name">
+                    <h3><a th:text="${friend.name}"></a></h3>
+                    <p><a th:text="${friend.description}"></a></p>
+                </div>
+                <div class="social-media">
+                    <ul>
+                        <li><a target="_blank" th:href="${friend.blogurl}" href="#"><i class="fa fa-link"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

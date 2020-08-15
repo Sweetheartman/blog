@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jason.dao.FriendsDao">
+
+    <insert id="addFridens" parameterType="com.jason.model.entity.Friends">
+        <selectKey keyProperty="id" resultType="int" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+        insert into tb_friends (name, gender,blogurl,imgurl,phone,mail,description)
+        values (#{name},#{gender},#{blogurl},#{imgurl},#{phone},#{mail},#{description})
+    </insert>
+    
+    <update id="updateFriends" parameterType="com.jason.model.entity.Friends">
+        update tb_friends
+        <set>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="gender != null">
+                gender=#{gender},
+            </if>
+            <if test="blogurl != null">
+                blogurl=#{blogurl},
+            </if>
+            <if test="imgurl != null">
+                imgurl=#{imgurl},
+            </if>
+            <if test="phone != null">
+                phone=#{phone},
+            </if>
+            <if test="mail != null">
+                mail=#{mail},
+            </if>
+            <if test="description != null">
+                description=#{description},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <delete id="deleteFriends" parameterType="int">
+        delete from tb_friends
+        where id=#{id}
+    </delete>
+
+    <select id="getAllFriends" resultType="com.jason.model.entity.Friends">
+        select * from tb_friends
+    </select>
+
+    <select id="getOneFriendById" parameterType="int" resultType="com.jason.model.entity.Friends">
+        select * from tb_friends
+        where id=#{id}
+    </select>
+</mapper>
